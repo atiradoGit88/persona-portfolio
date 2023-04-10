@@ -1,19 +1,14 @@
 let intro = document.querySelector(".introscreen")
 let logo = document.querySelector(".logo-header")
 let logoSpan = document.querySelectorAll(".logo")
-let id = document.getElementById("character-card")
 let music = document.querySelector("#music")
 let volume = document.querySelector("#volume")
 let cardLink = document.getElementById("card-link")
 let reveal = document.getElementById("show-more")
-let searchInput = document.querySelector("[data-search]")
+let characterSelector = document.getElementById("character-selector")
+let Allcharacters =[]
 
 
-
-searchInput.addEventListener("input", e => {
-    const value = e.target.value
-    console.log(value)
-})
 
 window.addEventListener ('DOMContentLoaded', () => {
 
@@ -46,38 +41,57 @@ window.addEventListener ('DOMContentLoaded', () => {
 fetch("/persona.json")
   .then((response) => response.json())
   .then((persona) => {
+      let Allcharacters = persona.results.characters
     
+      // console.log(persona)
+      
+      
+      
+      populateForm(Allcharacters)
+  })
+    let populateForm = Allcharacters => {
+        for (const names of Allcharacters) {
+            console.log(Allcharacters)
+        }
+    }
 
-    // console.log(persona)
-
-    let characters = persona.results.characters
-
-    // console.log(characters)
-
-
-
-    for (let char = 0; char < characters.length; char++){
-        let name = characters[char].name
+    for (let char = 0; char < Allcharacters.length; char++){
+        let name = Allcharacters[char].name
         // let charSite = characters[char].site_detail_url
         // window.open(charSite, "_self")
         // console.log (name)
     }
+    
 
+
+    fetch("/persona.json")
+    .then((response) => response.json())
+    .then((persona) => {
+        let Allcharacters = persona.results.characters
+      
+        // console.log(persona)
+        
+        
+        
+        
+    
+    let counter = 0
     for (let image = 0; image < imageList.length; image++) {
         let imageName = imageList[image].split(".")[0]
-    
-        if (imageName === characters[image].name) {
+        counter += 1
+
+
+        if (counter <= 10){
+        if (imageName === Allcharacters[image].name) {
             let characterImage = document.createElement("img");
             // console.log(imageName,characters[image].name)
 
-            console.log(imageName)
-
-
+            
             
             characterImage.addEventListener("click", (event) => {
-            let character = characters[image]
+            let character = Allcharacters[image]
             character.imageUrl = imageList[image]
-            let charSite = characters[image].site_detail_url
+            let charSite = Allcharacters[image].site_detail_url
             window.open(charSite, "_self")
             
 
@@ -94,6 +108,8 @@ fetch("/persona.json")
             
             
             cardLink.append(characterImage);
+        
+            }
         }
     }
 
