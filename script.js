@@ -150,18 +150,32 @@ fetch("/persona.json")
   searchBar.querySelector("button").onclick = () => {
     let input = searchBar.querySelector('input').value;
     let cards = cardLink.querySelectorAll(".image-card");
+    let filteredList = Allcharacters.filter((character, i) => {
+        character.index = i
+        return character.name.toLocaleLowerCase().includes(input.toLocaleLowerCase())
+        }
+    )
+            let characterCard = document.createElement("div");
+            let characterImage = document.createElement("img");
+            let characterLink = document.createElement("a");
+           
+            characterCard.className = "image-card";
 
-    for (let i = 0; i < cards.length; i++) {
-        
-        if (!input) {
-            cards[i].style.display = " ";
-        }
-        else if (Allcharacters[i].name.toLowerCase().includes(input.toLowerCase())) {
-            cards[i].style.display = " ";
-        } else {
-            cards[i].style.display = "none";
-        }
-    }
+            
+            characterImage.src = "characters/" + imageList[filteredList[0].index];
+            characterLink.href = Allcharacters[filteredList[0].index].site_detail_url;
+            characterLink.textContent = "Calling Card";
+            characterLink.target = "blank";
+            
+            // localStorage.setItem('Traits' + image, JSON.stringify(Allcharacters[image]));
+
+            
+            
+            characterCard.append(characterImage);
+            characterCard.append(characterLink);
+            cardLink.append(characterCard);
+    
+    
     // if search input is empty show all characters
   
     //if the search bar input matches name, show those characters 
