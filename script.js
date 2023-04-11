@@ -1,12 +1,16 @@
-let intro = document.querySelector(".introscreen")
-let logo = document.querySelector(".logo-header")
-let logoSpan = document.querySelectorAll(".logo")
-let music = document.querySelector("#music")
-let volume = document.querySelector("#volume")
-let cardLink = document.getElementById("card-link")
-let reveal = document.getElementById("show-more")
-let characterSelector = document.getElementById("character-selector")
-let Allcharacters =[]
+let intro = document.querySelector(".introscreen");
+let logo = document.querySelector(".logo-header");
+let logoSpan = document.querySelectorAll(".logo");
+let music = document.querySelector("#music");
+let volume = document.querySelector("#volume");
+let cardLink = document.getElementById("character-card");
+let reveal = document.getElementById("show-more");
+let characterSelector = document.getElementById("character-selector");
+let Allcharacters =[];
+let searchBar = document.querySelector(".search-bar");
+let showMore = document.querySelector("#show-more");
+let numberDisplayed = 12
+
 
 
 
@@ -51,7 +55,7 @@ fetch("/persona.json")
   })
     let populateForm = Allcharacters => {
         for (const names of Allcharacters) {
-            console.log(Allcharacters)
+            // console.log(Allcharacters)
         }
     }
 
@@ -67,50 +71,100 @@ fetch("/persona.json")
     fetch("/persona.json")
     .then((response) => response.json())
     .then((persona) => {
-        let Allcharacters = persona.results.characters
+        Allcharacters = persona.results.characters
       
-        // console.log(persona)
+        // console.log(Allcharacters)
         
+        let counter = 0
         
+        showMore.addEventListener("click", event => {
+            numberDisplayed += 12
+          for (let image = counter + 1; image < numberDisplayed; image++){
+            
+          let imageName = imageList[image].split(".")[0]
+          counter = image 
+
+
+        if (counter <= numberDisplayed){
+        if (imageName === Allcharacters[image].name) {
+            let characterCard = document.createElement("div");
+            let characterImage = document.createElement("img");
+            let characterLink = document.createElement("a");
+           
+            characterCard.className = "image-card";
+
+            
+            characterImage.src = "characters/" + imageList[image];
+            characterLink.href = Allcharacters[image].site_detail_url;
+            characterLink.textContent = "Calling Card";
+            characterLink.target = "blank";
+            
+            localStorage.setItem('Traits' + image, JSON.stringify(Allcharacters[image]));
+
+            
+            
+            characterCard.append(characterImage);
+            characterCard.append(characterLink);
+            cardLink.append(characterCard);
+        
+            }
+        }
+          }
+        })
         
         
     
-    let counter = 0
-    for (let image = 0; image < imageList.length; image++) {
+    for (let image = 0; image < numberDisplayed; image++) {
         let imageName = imageList[image].split(".")[0]
-        counter += 1
+          counter = image
 
 
-        if (counter <= 10){
+        if (counter <= numberDisplayed){
         if (imageName === Allcharacters[image].name) {
+            let characterCard = document.createElement("div");
             let characterImage = document.createElement("img");
-            // console.log(imageName,characters[image].name)
+            let characterLink = document.createElement("a");
+           
+            characterCard.className = "image-card";
+
+            
+            characterImage.src = "characters/" + imageList[image];
+            characterLink.href = Allcharacters[image].site_detail_url;
+            characterLink.textContent = "Calling Card";
+            characterLink.target = "blank";
+            
+            localStorage.setItem('Traits' + image, JSON.stringify(Allcharacters[image]));
 
             
             
-            characterImage.addEventListener("click", (event) => {
-            let character = Allcharacters[image]
-            character.imageUrl = imageList[image]
-            let charSite = Allcharacters[image].site_detail_url
-            window.open(charSite, "_self")
-            
-
-            localStorage.setItem('Traits' + image, JSON.stringify(character));
-            // window.open("index2.html", "_self")
-       
-            // Get saved data from localStorage
-            // localStorage.getItem('Traits') ? JSON.parse(localStorage.getItem('Traits')) : '';
-
-            })
-
-            
-            characterImage.src = "characters/" + imageList[image]
-            
-            
-            cardLink.append(characterImage);
+            characterCard.append(characterImage);
+            characterCard.append(characterLink);
+            cardLink.append(characterCard);
         
             }
         }
     }
 
   })
+
+  searchBar.querySelector("button").onclick = () => {
+    let input = searchBar.querySelector('input').value;
+    let cards = cardLink.querySelectorAll(".image-card");
+
+    for (let i = 0; i < cards.length; i++) {
+        
+        if (!input) {
+            cards[i].style.display = " ";
+        }
+        else if (Allcharacters[i].name.toLowerCase().includes(input.toLowerCase())) {
+            cards[i].style.display = " ";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+    // if search input is empty show all characters
+  
+    //if the search bar input matches name, show those characters 
+
+    //if the search input matches nobody, display "no characters found..."
+  }
